@@ -1,0 +1,12 @@
+{
+    "dataset_name": "Bank Marketing",
+    "source": "Kaggle",
+    "dataset_id": "henriqueyamahata/bank-marketing",
+    "download_method": "kagglehub",
+    "original_file": "bank-additional-full.csv",
+    "target": "y",
+    "rows": 41188,
+    "columns": 21,
+    "download_date": "2026-07-17",
+    "bronze_version": "1.0"
+}
