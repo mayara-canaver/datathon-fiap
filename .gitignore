@@ -1,5 +1,7 @@
-# Dados locais
-/data/
+# Ignorar datasets
+data/bronze/
+data/silver/
+data/gold/
 
 # Variáveis de ambiente
 .env
