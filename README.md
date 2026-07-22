@@ -133,7 +133,50 @@ mlflow ui --backend-store-uri ./mlruns --port 5000
 
 Abra http://127.0.0.1:5000 e revise o experimento `datathon-bandit` (conversão das políticas, lift e posteriors).
 
-> Próximo sprint (S4): parágrafo de arquitetura em nuvem no README + vídeo pitch.
+### Arquitetura-alvo em nuvem (S4 — Etapa 6)
+
+Em produção, o fluxo local seria mapeado para serviços gerenciados sem mudar a lógica do pipeline. Na **AWS**, o CSV/Kaggle (ou extratos internos anonimizados) entraria em um **Amazon S3** (camadas Bronze/Silver/Gold). O processamento (notebooks/jobs) rodaria em **AWS Glue**, **Amazon SageMaker Processing** ou um container em **ECS/Fargate**. Experimentos e artefatos do bandit ficariam no **MLflow** hospedado (Tracking Server + store em S3) ou no **SageMaker Model Registry**. A API FastAPI seria empacotada em imagem Docker e publicada via **Amazon ECS/Fargate** ou **AWS Lambda + API Gateway**, com logs/métricas no **CloudWatch**. Em **Azure**, o equivalente seria Blob Storage + Azure ML + Container Apps; em **GCP**, Cloud Storage + Vertex AI + Cloud Run. Em qualquer nuvem, decisões sensíveis de oferta manteriam **humano no loop** (aprovação/limites de exploração) e versionamento de dados/modelo para auditoria.
+
+Diagrama lógico (opcional):
+
+```text
+Kaggle/origem → Object Storage (Bronze/Silver/Gold)
+                      → Jobs de pipeline
+                      → MLflow (params/métricas/artefatos)
+                      → API containerizada → Canais digitais
+                      → Monitoramento (logs, conversão, drift)
+```
+
+### Demo Day — roteiro do vídeo pitch (S4 — Etapa 8)
+
+Vídeo de **até 5 minutos**. Não é necessário criar dezenas de slides. Grave com a API rodando (`uvicorn src.api:app --port 8000`).
+
+| Tempo | Bloco | O que falar / mostrar |
+|------:|-------|------------------------|
+| 0:00–0:40 | Problema | Banco digital decide canal/oferta; regras fixas e A/B longos desperdiçam tráfego |
+| 0:40–1:20 | Abordagem | Dataset Bank Marketing (Kaggle); pipeline Bronze→Silver→Gold; remoção de `duration` (leakage) |
+| 1:20–2:20 | Modelo | Baseline legado (`telephone`) vs **Thompson Sampling**; lift ~+5,7 p.p.; MLflow com métricas |
+| 2:20–4:20 | Demo ao vivo | Abrir `/docs` ou `curl` do GS01; mostrar `recommended_offer=cellular` + probabilidade; citar 1–2 personas do Golden Set |
+| 4:20–5:00 | Fechamento | Nuvem-alvo (S3 + API em container + MLflow); limitações (simulação offline, humano no loop); próximos passos |
+
+Checklist antes de gravar:
+
+- [ ] `pip install -r requirements.txt` e Gold gerada (`01`→`04`)
+- [ ] `05_baseline_bandit.ipynb` executado (artefatos em `artifacts/`)
+- [ ] `python scripts/log_mlflow.py` (run visível na UI, opcional na gravação)
+- [ ] `uvicorn src.api:app --port 8000` respondendo em `/health` e `/recommend`
+- [ ] Exemplo GS01 testado; README aberto para citar o link Kaggle se preciso
+
+### Checklist final do Datathon
+
+- [x] Repositório organizado com código e `requirements.txt`
+- [x] Notebook de EDA com base Kaggle limpa e referenciada
+- [x] Baseline e modelo adaptativo implementados e comparados
+- [x] Golden Set com 5 casos e recomendações
+- [x] Serviço executável (FastAPI) retornando predição
+- [x] README com link da base, infra em nuvem e instruções locais
+- [x] Tracking MLflow com params/métricas
+- [ ] Vídeo de apresentação (≤ 5 min) — gravar com o roteiro acima
 
 ## Pipeline (visão geral)
 
