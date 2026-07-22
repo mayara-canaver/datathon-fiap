@@ -15,7 +15,53 @@ Criar uma solução que ajude a identificar padrões de comportamento do cliente
 - construção de uma solução de recomendação/adaptação
 - documentação de decisões, limitações e critérios de governança
 
-Este repositório contém a implementação do fluxo de ingestão, tratamento, análise e deploy para o desafio do Datathon. Abaixo está o diagrama resumido do pipeline e suas etapas principais.
+## Base de dados (Kaggle)
+
+- Dataset: [Bank Marketing — henriqueyamahata](https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing)
+- Arquivo utilizado: `bank-additional-full.csv` (~41.188 linhas, 21 colunas)
+- Target: `y` (`yes` = converteu / `no` = não converteu)
+- Observação: a coluna `duration` é removida na camada Gold por representar **data leakage**
+- Metadados da origem: [`data/kaggle/metadata.json`](data/kaggle/metadata.json)
+
+## Como executar
+
+### Pré-requisitos
+
+- Python 3.9+
+- Conta Kaggle com API token (`~/.kaggle/kaggle.json` ou variáveis `KAGGLE_USERNAME` / `KAGGLE_KEY`) para o download na Bronze
+
+### Setup
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Pipeline de dados (ordem obrigatória)
+
+Execute os notebooks nesta ordem:
+
+1. `notebooks/01_ingestion_bronze.ipynb` — download Kaggle, validação de schema, persistência Bronze
+2. `notebooks/02_ingestion_silver.ipynb` — limpeza, tipagem, deduplicação → Silver
+3. `notebooks/03_eda.ipynb` — EDA, leakage, hipóteses para a Gold
+4. `notebooks/04_ingestion_gold.ipynb` — feature engineering, split train/test, persistência Gold
+
+As camadas `data/bronze`, `data/silver` e `data/gold` são geradas localmente (estão no `.gitignore`).
+
+### Saídas esperadas após o S1
+
+| Camada | Arquivo |
+|--------|---------|
+| Bronze | `data/bronze/bank_marketing_bronze.csv` |
+| Silver | `data/silver/bank_marketing_silver.csv` |
+| Gold | `data/gold/bank_marketing_gold.csv` |
+| Gold train/test | `data/gold/bank_marketing_gold_train.csv`, `..._test.csv` |
+| Metadata Gold | `data/gold/metadata.json` |
+
+> Próximos sprints (ainda não implementados): baseline + Thompson Sampling, Golden Set, FastAPI, MLflow e parágrafo de arquitetura em nuvem.
+
+## Pipeline (visão geral)
 
 ```text
                                          KAGGLE
@@ -71,6 +117,7 @@ Este repositório contém a implementação do fluxo de ingestão, tratamento, a
 │ • Criação da feature previous_success                                     │
 │ • Criação da feature campaign_bucket                                      │
 │ • Seleção das variáveis finais                                            │
+│ • Split train/test estratificado                                          │
 │ • Persistência da camada Gold                                             │
 └────────────────────────────────────────────────────────────────────────────┘
                                            │
@@ -127,9 +174,11 @@ Este repositório contém a implementação do fluxo de ingestão, tratamento, a
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Breve instrução: siga a ordem das camadas (Bronze → Silver → Gold) e registre cada passo (versionamento de dados e experimentos). Arquivos importantes:
+## Notebooks
 
-- `notebooks/01_ingestion_bronze.ipynb`
-- `notebooks/02_ingestion_silver.ipynb`
-- `notebooks/03_ingestion_gold.ipynb`
-
+| Ordem | Arquivo | Etapa |
+|------|---------|-------|
+| 1 | `notebooks/01_ingestion_bronze.ipynb` | Ingestão Bronze |
+| 2 | `notebooks/02_ingestion_silver.ipynb` | Tratamento Silver |
+| 3 | `notebooks/03_eda.ipynb` | EDA |
+| 4 | `notebooks/04_ingestion_gold.ipynb` | Feature engineering Gold |

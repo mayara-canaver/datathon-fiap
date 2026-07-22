@@ -5,3 +5,10 @@ data/gold/
 
 # Variáveis de ambiente
 .env
+
+# Virtualenv
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+mlruns/
+
