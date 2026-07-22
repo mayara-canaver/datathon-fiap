@@ -46,6 +46,7 @@ Execute os notebooks nesta ordem:
 2. `notebooks/02_ingestion_silver.ipynb` — limpeza, tipagem, deduplicação → Silver
 3. `notebooks/03_eda.ipynb` — EDA, leakage, hipóteses para a Gold
 4. `notebooks/04_ingestion_gold.ipynb` — feature engineering, split train/test, persistência Gold
+5. `notebooks/05_baseline_bandit.ipynb` — baseline × Thompson Sampling
 
 As camadas `data/bronze`, `data/silver` e `data/gold` são geradas localmente (estão no `.gitignore`).
 
@@ -59,7 +60,22 @@ As camadas `data/bronze`, `data/silver` e `data/gold` são geradas localmente (e
 | Gold train/test | `data/gold/bank_marketing_gold_train.csv`, `..._test.csv` |
 | Metadata Gold | `data/gold/metadata.json` |
 
-> Próximos sprints (ainda não implementados): baseline + Thompson Sampling, Golden Set, FastAPI, MLflow e parágrafo de arquitetura em nuvem.
+### Baseline × Bandit (S2)
+
+Decisão modelada: **canal de contato** (`cellular` vs `telephone`).
+
+| Política | Ideia | Conversão (simulação no test) |
+|----------|-------|-------------------------------|
+| Baseline legado | sempre `telephone` | ~7,1% |
+| Random | braço aleatório | ~10,2% |
+| Thompson Sampling | exploração bayesiana Beta–Bernoulli | ~12,8% |
+| Melhor histórico | sempre `cellular` (teto empírico) | ~12,9% |
+
+- Lift do Thompson Sampling vs baseline legado: **~+5,7 p.p.**
+- Artefatos: `artifacts/bandit_metrics.json`, `artifacts/thompson_policy.json`, `artifacts/reward_model.joblib`
+- Código reutilizável: `src/bandit.py`
+
+> Próximos sprints: Golden Set (S3), FastAPI + MLflow (S3), parágrafo de arquitetura em nuvem e vídeo (S4).
 
 ## Pipeline (visão geral)
 
@@ -182,3 +198,4 @@ As camadas `data/bronze`, `data/silver` e `data/gold` são geradas localmente (e
 | 2 | `notebooks/02_ingestion_silver.ipynb` | Tratamento Silver |
 | 3 | `notebooks/03_eda.ipynb` | EDA |
 | 4 | `notebooks/04_ingestion_gold.ipynb` | Feature engineering Gold |
+| 5 | `notebooks/05_baseline_bandit.ipynb` | Baseline × Thompson Sampling |

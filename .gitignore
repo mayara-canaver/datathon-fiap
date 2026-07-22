@@ -11,4 +11,5 @@ data/gold/
 __pycache__/
 .ipynb_checkpoints/
 mlruns/
+*.pyc
 

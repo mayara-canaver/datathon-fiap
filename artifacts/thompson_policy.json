@@ -1,0 +1,18 @@
+{
+    "arms": [
+        "cellular",
+        "telephone"
+    ],
+    "alpha": {
+        "cellular": 1037.0,
+        "telephone": 16.0
+    },
+    "beta": {
+        "cellular": 7001.0,
+        "telephone": 186.0
+    },
+    "mean_estimates": {
+        "cellular": 0.12901219208758397,
+        "telephone": 0.07920792079207921
+    }
+}
