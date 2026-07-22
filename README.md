@@ -47,6 +47,7 @@ Execute os notebooks nesta ordem:
 3. `notebooks/03_eda.ipynb` — EDA, leakage, hipóteses para a Gold
 4. `notebooks/04_ingestion_gold.ipynb` — feature engineering, split train/test, persistência Gold
 5. `notebooks/05_baseline_bandit.ipynb` — baseline × Thompson Sampling
+6. `notebooks/06_evaluation_golden_set.ipynb` — Golden Set (5 clientes)
 
 As camadas `data/bronze`, `data/silver` e `data/gold` são geradas localmente (estão no `.gitignore`).
 
@@ -75,7 +76,64 @@ Decisão modelada: **canal de contato** (`cellular` vs `telephone`).
 - Artefatos: `artifacts/bandit_metrics.json`, `artifacts/thompson_policy.json`, `artifacts/reward_model.joblib`
 - Código reutilizável: `src/bandit.py`
 
-> Próximos sprints: Golden Set (S3), FastAPI + MLflow (S3), parágrafo de arquitetura em nuvem e vídeo (S4).
+### Golden Set, API e MLflow (S3)
+
+#### Golden Set (5 clientes)
+
+Arquivo: [`artifacts/golden_set.json`](artifacts/golden_set.json) — também executável em `notebooks/06_evaluation_golden_set.ipynb`.
+
+| ID | Persona | Oferta recomendada | Faz sentido? |
+|----|---------|--------------------|--------------|
+| GS01 | Estudante com sucesso prévio | `cellular` | Sim — histórico positivo |
+| GS02 | Aposentado em 1º contato | `cellular` | Sim — canal com maior conversão |
+| GS03 | Admin após falha prévia | `cellular` | Sim — corrige abordagem |
+| GS04 | Blue-collar com muitos contatos | `cellular` | Sim — evita canal legado fraco |
+| GS05 | Empresário (histórico telephone) | `cellular` | Sim — política adapta vs regra fixa |
+
+#### API FastAPI
+
+```bash
+# na raiz do repositório, com a venv ativa
+uvicorn src.api:app --reload --port 8000
+```
+
+Health check:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Recomendação (exemplo GS01):
+
+```bash
+curl -s http://127.0.0.1:8000/recommend \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "mode": "exploit",
+    "customer": {
+      "age": 30, "job": "student", "marital": "single",
+      "education": "professional course", "housing": "yes", "loan": "no",
+      "month": "sep", "day_of_week": "tue", "campaign": 2, "pdays": 6,
+      "previous": 1, "poutcome": "success", "emp.var.rate": -1.1,
+      "cons.price.idx": 94.199, "cons.conf.idx": -37.5, "euribor3m": 0.88,
+      "nr.employed": 4963.6, "never_contacted": 0, "previous_success": 1,
+      "campaign_bucket": "few_contacts"
+    }
+  }'
+```
+
+Docs interativas: http://127.0.0.1:8000/docs
+
+#### MLflow (tracking local)
+
+```bash
+python scripts/log_mlflow.py
+mlflow ui --backend-store-uri ./mlruns --port 5000
+```
+
+Abra http://127.0.0.1:5000 e revise o experimento `datathon-bandit` (conversão das políticas, lift e posteriors).
+
+> Próximo sprint (S4): parágrafo de arquitetura em nuvem no README + vídeo pitch.
 
 ## Pipeline (visão geral)
 
@@ -199,3 +257,4 @@ Decisão modelada: **canal de contato** (`cellular` vs `telephone`).
 | 3 | `notebooks/03_eda.ipynb` | EDA |
 | 4 | `notebooks/04_ingestion_gold.ipynb` | Feature engineering Gold |
 | 5 | `notebooks/05_baseline_bandit.ipynb` | Baseline × Thompson Sampling |
+| 6 | `notebooks/06_evaluation_golden_set.ipynb` | Golden Set (5 casos) |

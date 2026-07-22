@@ -11,7 +11,7 @@
             "policy": "baseline_historical_best",
             "conversion": 0.12931034482758622,
             "exploration_rate": 0.0,
-            "share_telephone": NaN,
+            "share_telephone": null,
             "share_cellular": 1.0
         },
         {
@@ -33,7 +33,7 @@
             "conversion": 0.0710296260320544,
             "exploration_rate": 0.0,
             "share_telephone": 1.0,
-            "share_cellular": NaN
+            "share_cellular": null
         }
     ],
     "lift_ts_vs_legacy": 0.0565808644973288,

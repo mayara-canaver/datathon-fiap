@@ -90,6 +90,10 @@ class ThompsonSamplingPolicy:
         samples = {arm: rng.beta(self.alpha[arm], self.beta[arm]) for arm in self.arms}
         return max(samples, key=samples.get)
 
+    def select_greedy(self) -> str:
+        means = self.mean_estimates()
+        return max(means, key=means.get)
+
     def update(self, arm: str, reward: float) -> None:
         self.alpha[arm] += reward
         self.beta[arm] += 1.0 - reward
@@ -106,6 +110,14 @@ class ThompsonSamplingPolicy:
             "beta": dict(self.beta),
             "mean_estimates": self.mean_estimates(),
         }
+
+    @classmethod
+    def from_dict(cls, payload: dict) -> "ThompsonSamplingPolicy":
+        return cls(
+            arms=payload.get("arms", list(DEFAULT_ARMS)),
+            alpha={k: float(v) for k, v in payload.get("alpha", {}).items()},
+            beta={k: float(v) for k, v in payload.get("beta", {}).items()},
+        )
 
 
 @dataclass

@@ -1,0 +1,192 @@
+{
+  "description": "Golden Set simplificado (5 clientes) para Etapa 4 do Datathon",
+  "algorithm": "thompson_sampling",
+  "mode": "exploit",
+  "cases": [
+    {
+      "case_id": "GS01",
+      "persona": "Estudante com sucesso em campanha anterior",
+      "customer": {
+        "age": 30,
+        "job": "student",
+        "marital": "single",
+        "education": "professional course",
+        "housing": "yes",
+        "loan": "no",
+        "month": "sep",
+        "day_of_week": "tue",
+        "campaign": 2,
+        "pdays": 6,
+        "previous": 1,
+        "poutcome": "success",
+        "emp.var.rate": -1.1,
+        "cons.price.idx": 94.199,
+        "cons.conf.idx": -37.5,
+        "euribor3m": 0.88,
+        "nr.employed": 4963.6,
+        "never_contacted": 0,
+        "previous_success": 1,
+        "campaign_bucket": "few_contacts"
+      },
+      "expected_offer": "cellular",
+      "business_rationale": "Histórico positivo (poutcome=success) e perfil jovem: celular tende a converter melhor.",
+      "model_output": {
+        "recommended_offer": "cellular",
+        "conversion_probability": 0.758894278472477,
+        "conversion_by_arm": {
+          "cellular": 0.758894278472477,
+          "telephone": 0.6018369231424364
+        },
+        "makes_sense": true
+      }
+    },
+    {
+      "case_id": "GS02",
+      "persona": "Aposentado em primeiro contato",
+      "customer": {
+        "age": 85,
+        "job": "retired",
+        "marital": "married",
+        "education": "basic 4y",
+        "housing": "no",
+        "loan": "no",
+        "month": "apr",
+        "day_of_week": "mon",
+        "campaign": 1,
+        "pdays": 999,
+        "previous": 0,
+        "poutcome": "nonexistent",
+        "emp.var.rate": -1.8,
+        "cons.price.idx": 93.075,
+        "cons.conf.idx": -47.1,
+        "euribor3m": 1.392,
+        "nr.employed": 5099.1,
+        "never_contacted": 1,
+        "previous_success": 0,
+        "campaign_bucket": "first_contact"
+      },
+      "expected_offer": "cellular",
+      "business_rationale": "Mesmo em idade avançada, a política aprendida favorece cellular frente ao telefone fixo legado.",
+      "model_output": {
+        "recommended_offer": "cellular",
+        "conversion_probability": 0.21874903335375545,
+        "conversion_by_arm": {
+          "cellular": 0.21874903335375545,
+          "telephone": 0.11852492614722372
+        },
+        "makes_sense": true
+      }
+    },
+    {
+      "case_id": "GS03",
+      "persona": "Admin em primeira abordagem após falha prévia",
+      "customer": {
+        "age": 46,
+        "job": "admin",
+        "marital": "married",
+        "education": "high school",
+        "housing": "yes",
+        "loan": "no",
+        "month": "may",
+        "day_of_week": "wed",
+        "campaign": 1,
+        "pdays": 999,
+        "previous": 1,
+        "poutcome": "failure",
+        "emp.var.rate": -1.8,
+        "cons.price.idx": 92.893,
+        "cons.conf.idx": -46.2,
+        "euribor3m": 1.334,
+        "nr.employed": 5099.1,
+        "never_contacted": 1,
+        "previous_success": 0,
+        "campaign_bucket": "first_contact"
+      },
+      "expected_offer": "cellular",
+      "business_rationale": "Após falha anterior, priorizar o canal com maior conversão esperada (cellular).",
+      "model_output": {
+        "recommended_offer": "cellular",
+        "conversion_probability": 0.0755645350090899,
+        "conversion_by_arm": {
+          "cellular": 0.0755645350090899,
+          "telephone": 0.03777145668269184
+        },
+        "makes_sense": true
+      }
+    },
+    {
+      "case_id": "GS04",
+      "persona": "Blue-collar com muitos contatos na campanha",
+      "customer": {
+        "age": 52,
+        "job": "blue collar",
+        "marital": "married",
+        "education": "basic 9y",
+        "housing": "no",
+        "loan": "no",
+        "month": "jun",
+        "day_of_week": "fri",
+        "campaign": 4,
+        "pdays": 999,
+        "previous": 0,
+        "poutcome": "nonexistent",
+        "emp.var.rate": 1.4,
+        "cons.price.idx": 94.465,
+        "cons.conf.idx": -41.8,
+        "euribor3m": 4.959,
+        "nr.employed": 5228.1,
+        "never_contacted": 1,
+        "previous_success": 0,
+        "campaign_bucket": "many_contacts"
+      },
+      "expected_offer": "cellular",
+      "business_rationale": "Campanha saturada: ainda assim cellular supera telephone na política aprendida.",
+      "model_output": {
+        "recommended_offer": "cellular",
+        "conversion_probability": 0.0783226953324411,
+        "conversion_by_arm": {
+          "cellular": 0.0783226953324411,
+          "telephone": 0.03920865075436281
+        },
+        "makes_sense": true
+      }
+    },
+    {
+      "case_id": "GS05",
+      "persona": "Empresário historicamente contactado por telephone",
+      "customer": {
+        "age": 45,
+        "job": "entrepreneur",
+        "marital": "married",
+        "education": "university degree",
+        "housing": "no",
+        "loan": "no",
+        "month": "jun",
+        "day_of_week": "wed",
+        "campaign": 9,
+        "pdays": 999,
+        "previous": 0,
+        "poutcome": "nonexistent",
+        "emp.var.rate": 1.4,
+        "cons.price.idx": 94.465,
+        "cons.conf.idx": -41.8,
+        "euribor3m": 4.962,
+        "nr.employed": 5228.1,
+        "never_contacted": 1,
+        "previous_success": 0,
+        "campaign_bucket": "many_contacts"
+      },
+      "expected_offer": "cellular",
+      "business_rationale": "Regra legada usaria telephone; a política adaptativa corrige para cellular.",
+      "model_output": {
+        "recommended_offer": "cellular",
+        "conversion_probability": 0.08907135405657411,
+        "conversion_by_arm": {
+          "cellular": 0.08907135405657411,
+          "telephone": 0.04485068162015711
+        },
+        "makes_sense": true
+      }
+    }
+  ]
+}

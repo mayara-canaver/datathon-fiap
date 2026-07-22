@@ -7,6 +7,7 @@ kagglehub
 mlflow
 fastapi
 uvicorn
+httpx
 pydantic
 joblib
 ipykernel
