@@ -23,6 +23,14 @@ Criar uma solução que ajude a identificar padrões de comportamento do cliente
 - Observação: a coluna `duration` é removida na camada Gold por representar **data leakage**
 - Metadados da origem: [`data/kaggle/metadata.json`](data/kaggle/metadata.json)
 
+## Governança e uso de dados
+
+- **Base legal / natureza dos dados**: dataset público e anonimizado do Kaggle, sem dados reais de clientes, identificadores, patrimônio, renda, gênero, raça ou regras comerciais privadas. Uso didático/demonstrativo, sem implicações de compliance sobre dados pessoais reais.
+- **Finalidade**: simular uma política de decisão de canal de contato (`cellular` vs `telephone`) em campanhas de marketing bancário, para fins de estudo de algoritmos adaptativos (multi-armed bandit).
+- **Minimização**: apenas as colunas necessárias para o modelo de recompensa seguem até a camada Gold; `duration` (vazamento temporal) e `default` (pouco informativa) são descartadas ainda no tratamento.
+- **Retenção**: o controle de versão mantém somente metadados, modelo treinado e políticas agregadas (`artifacts/`); as camadas `data/bronze`, `data/silver` e `data/gold`, com os dados linha a linha, não são versionadas (`.gitignore`) e podem ser recriadas a qualquer momento a partir do Kaggle.
+- **Humano no loop**: em um cenário real, decisões sensíveis de oferta manteriam aprovação humana e limites de exploração antes de impactar o cliente final — a política adaptativa aqui é um apoio à decisão, não uma decisão autônoma.
+
 ## Como executar
 
 ### Pré-requisitos
@@ -73,6 +81,7 @@ Decisão modelada: **canal de contato** (`cellular` vs `telephone`).
 | Melhor histórico | sempre `cellular` (teto empírico) | ~12,9% |
 
 - Lift do Thompson Sampling vs baseline legado: **~+5,7 p.p.**
+- Nota: o Thompson Sampling fica levemente abaixo do "melhor histórico" (teto empírico, que já nasce sabendo o braço vencedor) porque reserva parte do tráfego para exploração — isso é esperado, já que a política aprende essa preferência online, sem conhecer o melhor braço a priori.
 - Artefatos: `artifacts/bandit_metrics.json`, `artifacts/thompson_policy.json`, `artifacts/reward_model.joblib`
 - Código reutilizável: `src/bandit.py`
 
@@ -150,6 +159,8 @@ Kaggle/origem → Object Storage (Bronze/Silver/Gold)
 ### Demo Day — roteiro do vídeo pitch (S4 — Etapa 8)
 
 Vídeo de **até 5 minutos**. Não é necessário criar dezenas de slides. Grave com a API rodando (`uvicorn src.api:app --port 8000`).
+
+Roteiro palavra-por-palavra, pronto para ler durante a gravação: [`ROTEIRO_VIDEO.md`](ROTEIRO_VIDEO.md).
 
 | Tempo | Bloco | O que falar / mostrar |
 |------:|-------|------------------------|
