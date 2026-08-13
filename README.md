@@ -158,39 +158,6 @@ Kaggle/origem → Object Storage (Bronze/Silver/Gold)
                       → Monitoramento (logs, conversão, drift)
 ```
 
-### Demo Day — roteiro do vídeo pitch (S4 — Etapa 8)
-
-Vídeo de **até 5 minutos**. Não é necessário criar dezenas de slides. Grave com a API rodando (`uvicorn src.api:app --port 8000`).
-
-Roteiro palavra-por-palavra, pronto para ler durante a gravação: [`ROTEIRO_VIDEO.md`](ROTEIRO_VIDEO.md).
-
-| Tempo | Bloco | O que falar / mostrar |
-|------:|-------|------------------------|
-| 0:00–0:40 | Problema | Banco digital decide canal/oferta; regras fixas e A/B longos desperdiçam tráfego |
-| 0:40–1:20 | Abordagem | Dataset Bank Marketing (Kaggle); pipeline Bronze→Silver→Gold; remoção de `duration` (leakage) |
-| 1:20–2:30 | Modelo + MLflow | Baseline legado (`telephone`) vs **Thompson Sampling**; lift ~+5,7 p.p.; **abrir a UI do MLflow** e mostrar params/métricas do run `thompson_vs_baseline` |
-| 2:30–4:20 | Demo ao vivo | Abrir `/docs` ou `curl` do GS01; mostrar `recommended_offer=cellular` + probabilidade; citar 1–2 personas do Golden Set |
-| 4:20–5:00 | Fechamento | Nuvem-alvo (S3 + API em container + MLflow); limitações (simulação offline, humano no loop); próximos passos |
-
-Checklist antes de gravar:
-
-- [ ] `pip install -r requirements.txt` e Gold gerada (`01`→`04`)
-- [ ] `05_baseline_bandit.ipynb` executado (artefatos em `artifacts/`)
-- [ ] `python scripts/log_mlflow.py` executado e `mlflow ui --backend-store-uri ./mlruns --port 5000` no ar — a UI **deve aparecer na gravação** (Etapa 7)
-- [ ] `uvicorn src.api:app --port 8000` respondendo em `/health` e `/recommend`
-- [ ] Exemplo GS01 testado; README aberto para citar o link Kaggle se preciso
-
-### Checklist final do Datathon
-
-- [x] Repositório organizado com código e `requirements.txt`
-- [x] Notebook de EDA com base Kaggle limpa e referenciada
-- [x] Baseline e modelo adaptativo implementados e comparados
-- [x] Golden Set com 5 casos e recomendações
-- [x] Serviço executável (FastAPI) retornando predição
-- [x] README com link da base, infra em nuvem e instruções locais
-- [x] Tracking MLflow com params/métricas
-- [ ] Vídeo de apresentação (≤ 5 min) — gravar com o roteiro acima
-
 ## Pipeline (visão geral)
 
 ```text
