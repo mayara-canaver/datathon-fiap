@@ -3,9 +3,15 @@
 Texto pronto para ler durante a gravação. Linguagem simples, direta, sem jargão
 desnecessário. Cada bloco indica o que **falar** e o que **mostrar na tela**.
 
-Antes de gravar, deixe abertos: terminal com a venv ativa, o `README.md`, e
+Antes de gravar, deixe abertos: terminal com a venv ativa, o `README.md`,
 rode `uvicorn src.api:app --port 8000` em outro terminal para a API já estar
-no ar.
+no ar, e suba também a UI do MLflow (`mlflow ui --backend-store-uri ./mlruns --port 5000`)
+numa aba do navegador em `http://127.0.0.1:5000`.
+
+> **Atenção (macOS):** a porta 5000 costuma estar ocupada pelo AirPlay
+> Receiver. Se `http://127.0.0.1:5000` não abrir a UI do MLflow, desative em
+> Ajustes do Sistema → Geral → AirDrop e Handoff → AirPlay Receiver, ou suba
+> o MLflow em outra porta: `mlflow ui --backend-store-uri ./mlruns --port 5001`.
 
 ---
 
@@ -41,7 +47,7 @@ no ar.
 
 ---
 
-## 1:20–2:20 — Modelo
+## 1:20–2:30 — Modelo + MLflow
 
 **Mostrar na tela:** tabela de resultados do `05_baseline_bandit.ipynb` ou a
 tabela "Baseline × Bandit" do README.
@@ -54,12 +60,22 @@ tabela "Baseline × Bandit" do README.
 > dois canais e vai concentrando as tentativas no que converte mais. Ele
 > chegou a quase 13% de conversão, um ganho de mais de 5 pontos percentuais
 > sobre o baseline — e isso sem precisar travar a decisão numa regra fixa
-> desde o início. Registramos todos esses parâmetros e métricas no MLflow,
-> para rastrear os experimentos."
+> desde o início."
+
+**Trocar para a aba do navegador com a UI do MLflow** (`http://127.0.0.1:5000`),
+abrir o experimento `datathon-bandit` e o run `thompson_vs_baseline`, mostrando
+a lista de parâmetros e métricas.
+
+**Falar (com a tela do MLflow aberta):**
+
+> "Todo esse experimento fica rastreado no MLflow: aqui estão os parâmetros
+> do algoritmo — priors, número de rodadas, braços — e as métricas de
+> conversão e o lift de cada política. Isso dá rastreabilidade: dá pra
+> comparar versões futuras do modelo contra essa baseline registrada."
 
 ---
 
-## 2:20–4:20 — Demo ao vivo
+## 2:30–4:20 — Demo ao vivo
 
 **Mostrar na tela:** terminal e/ou `/docs` da API rodando.
 
@@ -118,6 +134,10 @@ curl -s http://127.0.0.1:8000/recommend \
 
 - [ ] API rodando e respondendo em `/health` e `/recommend`
 - [ ] Exemplo GS01 testado uma vez fora da gravação (evita erro ao vivo)
+- [ ] `mlflow ui --backend-store-uri ./mlruns --port 5000` rodando, com o run
+      `thompson_vs_baseline` do experimento `datathon-bandit` visível em
+      `http://127.0.0.1:5000` (se a pasta `mlruns/` estiver vazia, rode antes
+      `python scripts/log_mlflow.py`)
 - [ ] README aberto nas abas: Objetivo, Baseline × Bandit, Arquitetura em nuvem
 - [ ] Cronômetro visível ou app de gravação com timer, para não passar de 5 min
 - [ ] Áudio testado (sem eco/ruído) antes de começar
