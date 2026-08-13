@@ -13,3 +13,6 @@ __pycache__/
 mlruns/
 *.pyc
 
+# Roteiro de gravação (uso interno, não versionar)
+ROTEIRO_VIDEO.md
+
